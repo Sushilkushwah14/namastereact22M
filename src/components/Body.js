@@ -54,10 +54,10 @@
 
 
 import RestaurantCard from "./RestaurantCard";
-import resobj from "../utils/mockData";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
   //local state variable-super powerful variable
@@ -95,23 +95,28 @@ const Body = () => {
   // if (listOfRestaurent.length==[])
   // {
   //   return  <Shimmer/>
-  // }c
+  // }
   //by using tertory operator
+
+  const onlinestatus=useOnlineStatus();
+  if(onlinestatus==false) return (<h1>looks like you are offline! please chech your internet</h1>)
+  
   return listOfRestaurent.length == [] ? (
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="filter">
-        <div className="search">
+      <div className="filter flex">
+        <div className="search m-4 p-4  ">
           <input
             type="Text"
-            className="search-text"
+            className="border border-solid border-black "
             value={searchText}
             onChange={(e) => {
               setsearchText(e.target.value);
             }}
           />
-          <button
+          <div  className="search m-4 p-4 flex items-center">
+          <button className="px-4 py-2 m-4 bg-green-100 rounded-lg"
             onClick={() => {
               const searchTextLower = searchText.toLowerCase();
               const filteredRestaurants = listOfRestaurent.filter(
@@ -127,7 +132,7 @@ const Body = () => {
           </button>
         </div>
         <button
-          className="filter-btn"
+          className="px-4 py-2 bg-gray-100 rounded-lg"
           onClick={() => {
             const filteredObj = listOfRestaurent.filter(
               (res) => res?.info?.avgRating> 4
@@ -137,8 +142,9 @@ const Body = () => {
         >
           Top Rated Restaurents
         </button>
+        </div>
       </div>
-      <div className="res-container">
+      <div className="flex flex-wrap ">
         {filteredRestraunts.map((restaurent) => {
           {
             /* console.log(restaurent) */
