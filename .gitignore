@@ -1,3 +1,6 @@
 /node_modules
 /dist
 /.parcel-cache
+/git add .
+/git commit -m 'comment anything'
+/git push origin main

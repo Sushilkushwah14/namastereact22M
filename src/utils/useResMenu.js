@@ -11,10 +11,14 @@ const useResMenu=(resId)=>{
    },[])
 
 const fetchdata=async ()=>{
-   const data=await fetch(MENU_API+resId)
-   const Json=await data.json();
-   setresInfo(Json.data)
-}
+   const data=await fetch(MENU_API+ resId) 
+   const json=await data.json();
+
+   setresInfo(json.data);
+   
+   
+};
 return resInfo;
+
 }
 export default useResMenu

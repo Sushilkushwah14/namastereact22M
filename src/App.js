@@ -3,7 +3,7 @@ import ReactDom from 'react-dom/client'
 import Header from "./components/Header.js"
 import Body from './components/Body.js'
 import { createBrowserRouter,RouterProvider,Outlet } from 'react-router-dom'
-import About from './components/About.js'
+// import About from './components/About.js'
 import Contact from './components/Contact.js'
 import Error from './components/Error.js'
 import ResMenu from './components/ResMenu.js'
@@ -16,6 +16,9 @@ import ResMenu from './components/ResMenu.js'
 //dynamix import
 const Grocery=lazy(()=>import('./components/Grocery.js'));//this is lazy type import to divide code of that component when is it used or needed
                 //callback function +import+path of component
+const About=lazy(()=>import('./components/About.js'));
+
+
 const AppLayout=()=>{
     return(
         <div className='app'>
@@ -41,7 +44,7 @@ const appRouter=createBrowserRouter([//Gives configuration about components
             },
             {
                 path:"/about",
-                element:<About/>,
+                element:<Suspense fallback={<h1>loading....</h1>}><About/></Suspense>,
             },
             {
                 path:"/contact",

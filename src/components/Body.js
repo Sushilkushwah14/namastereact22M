@@ -53,7 +53,7 @@
 // export default Body
 
 
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard,{isopen} from "./RestaurantCard";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
@@ -64,7 +64,9 @@ const Body = () => {
   const [listOfRestaurent, setRestaurent] = useState([]);
   const [filteredRestraunts, setFilteredRestraunts] = useState([]);
   const [searchText, setsearchText] = useState([]);
-
+  
+   const RestaurantCardisOpen=isopen(RestaurantCard);
+  console.log(listOfRestaurent);
 
   useEffect(() => {
     fetchData();
@@ -101,11 +103,11 @@ const Body = () => {
   const onlinestatus=useOnlineStatus();
   if(onlinestatus==false) return (<h1>looks like you are offline! please chech your internet</h1>)
   
-  return listOfRestaurent.length == [] ? (
+  return listOfRestaurent.length === 0 ? (
     <Shimmer />
   ) : (
-    <div className="body">
-      <div className="filter flex">
+    <div className="body ">
+      <div className="filter flex border border-solid border-black px-2">
         <div className="search m-4 p-4  ">
           <input
             type="Text"
@@ -115,9 +117,11 @@ const Body = () => {
               setsearchText(e.target.value);
             }}
           />
-          <div  className="search m-4 p-4 flex items-center">
+          {/* <div  className="search m-4 p-4 flex items-center"> */}
           <button className="px-4 py-2 m-4 bg-green-100 rounded-lg"
             onClick={() => {
+              //filter the reataurant and update the restaurant
+              //
               const searchTextLower = searchText.toLowerCase();
               const filteredRestaurants = listOfRestaurent.filter(
                 (restaurant) =>
@@ -130,20 +134,20 @@ const Body = () => {
           >
             Search
           </button>
-        </div>
+          </div>
         <button
-          className="px-4 py-2 bg-gray-100 rounded-lg"
+          className="px-5 py-2 my-12 bg-green-100 rounded-lg"
           onClick={() => {
-            const filteredObj = listOfRestaurent.filter(
-              (res) => res?.info?.avgRating> 4
+            const filteredlist = listOfRestaurent.filter(
+              (res) => res?.info?.avgRatingString > "4"
             ); /************** */
-            setRestaurent(filteredObj);
+            setRestaurent(filteredlist);
           }}
         >
           Top Rated Restaurents
         </button>
         </div>
-      </div>
+      {/* </div> */}
       <div className="flex flex-wrap ">
         {filteredRestraunts.map((restaurent) => {
           {
@@ -152,9 +156,16 @@ const Body = () => {
           return (
             <Link
             key={restaurent.info.id}
-             to={"/restaurants/"+restaurent.info.id}
+             to={"/restaurants/"+restaurent.info?.id}
               >
-                 <RestaurantCard  resdata={restaurent} />
+              {/* if restaurant is open than show open otherwise close */
+              restaurent.info.isOpen?(
+                <RestaurantCardisOpen resdata={restaurent} />
+                ):(
+                <RestaurantCard  resdata={restaurent} />
+                )
+              }
+                
             </Link>
           );
         })}
