@@ -1,4 +1,4 @@
-import React,{lazy,Suspense} from 'react'
+import React,{lazy,Suspense, useEffect, useState} from 'react'
 import ReactDom from 'react-dom/client'
 import Header from "./components/Header.js"
 import Body from './components/Body.js'
@@ -7,7 +7,10 @@ import { createBrowserRouter,RouterProvider,Outlet } from 'react-router-dom'
 import Contact from './components/Contact.js'
 import Error from './components/Error.js'
 import ResMenu from './components/ResMenu.js'
-// import Grocery from './components/Grocery.js'
+import UserContext from './utils/UserContext.js'
+import { Provider } from 'react-redux'
+import appStore from './utils/appStore.js'
+import Cart from './components/Cart.js'
 
 //chunking
 //lazy loading or on demand loading
@@ -20,16 +23,32 @@ const About=lazy(()=>import('./components/About.js'));
 
 
 const AppLayout=()=>{
+
+    const[username,setuserName]=useState();
+
+    useEffect(()=>{
+        const data={
+            name:"sushil kushwah",
+    }
+    setuserName(data.name)
+},[])
+
     return(
+        <Provider store={appStore}>
+        <UserContext.Provider value={{loggedInUser:username,setuserName}}>
         <div className='app'>
+        
             <Header/>
             
             <Outlet/>
 
         </div>
+        </UserContext.Provider>
+        </Provider>
     )
 }
-const appRouter=createBrowserRouter([//Gives configuration about components
+const appRouter=createBrowserRouter([
+    //Gives configuration about components
     {
         path:"/",
         element:<AppLayout/>,
@@ -58,11 +77,13 @@ const appRouter=createBrowserRouter([//Gives configuration about components
                 path:"/restaurants/:resId",
                 element:<ResMenu/>,
             },
+            {
+                path:"/cart",
+                element:<Cart/>,
+            }
         ],
         errorElement:<Error/>,
     },
-
-
 ])
 
 const root=ReactDom.createRoot(document.getElementById('root'));
